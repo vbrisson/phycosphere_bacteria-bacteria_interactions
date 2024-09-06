@@ -1,4 +1,15 @@
+library("ggplot2")
+library(ggforce)
+library("dplyr")
+library("ggbreak")
+library(FSA)
+library(scales)
 source("utils.R")
+
+cnet <- read.csv("data/SIP_cnet_v2.csv")
+cnet <- cnet[cnet$Cnet>0,]
+cnet$Cnet <- cnet$Cnet*100 # to percent
+cnet_info <- read.csv("data/SIP_sample_info.csv")
 
 df_summ <- get_total_incorp_df()$df_summ
 
@@ -40,3 +51,5 @@ df_summ %>% mutate(SD = c_incorp_sd) %>%
   )
 
 ggsave("figures/C_incorp_total.pdf", width = 1.6, height = 1.7)
+
+write.csv(df_summ, "data/c_mass_incorp.csv")

@@ -204,6 +204,11 @@ get_total_incorp_df <- function(){
   cnet_info <- read.csv("data/SIP_sample_info.csv")
   mass <- read.table("data/mass.csv", header = TRUE, sep = ',')  # [fg]
   
+  count_pt$Treatment[count_pt$Treatment==1] <- 'Devosia'
+  count_pt$Treatment[count_pt$Treatment==2] <- 'none'
+  count_pt$Treatment[count_pt$Treatment==3] <- 'Alcanivorax'
+  count_pt$Treatment[count_pt$Treatment==4] <- 'Marinobacter'
+  
   # Here we assume that bacterial cell number and Cnet are conditionally 
   # independent given algal cell number. For each microplate, the amount of 
   # bacterial incorporation of algal carbon is estimated by multiplying Cnet 
@@ -219,6 +224,10 @@ get_total_incorp_df <- function(){
               abd_med = median(Abundance),
               count_total = mean(Abundance) * 6
     ) # merge over 6 wells per ring
+  count_bact_summ$Treatment[count_bact_summ$Treatment==1] <- 'Devosia'
+  count_bact_summ$Treatment[count_bact_summ$Treatment==2] <- 'none'
+  count_bact_summ$Treatment[count_bact_summ$Treatment==3] <- 'Alcanivorax'
+  count_bact_summ$Treatment[count_bact_summ$Treatment==4] <- 'Marinobacter'
   
   # summarize cnet
   cnet$microplate <- NA
