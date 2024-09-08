@@ -8,8 +8,18 @@ source('utils.R')
 # import and clean data
 count_bact <- read.csv("data/flow2_bact.csv")
 count_bact <- subset(count_bact, Time==14)
+count_bact$Ring[count_bact$Ring==1] <- 'inner'
+count_bact$Ring[count_bact$Ring==2] <- 'outer'
+count_bact$Treatment[count_bact$Treatment==1] <- 'Devosia'
+count_bact$Treatment[count_bact$Treatment==2] <- 'none'
+count_bact$Treatment[count_bact$Treatment==3] <- 'Alcanivorax'
+count_bact$Treatment[count_bact$Treatment==4] <- 'Marinobacter'
 count_pt <- read.csv("data/flow2_pt.csv")
 count_pt <- subset(count_pt, Time==14)
+count_pt$Treatment[count_pt$Treatment==1] <- 'Devosia'
+count_pt$Treatment[count_pt$Treatment==2] <- 'none'
+count_pt$Treatment[count_pt$Treatment==3] <- 'Alcanivorax'
+count_pt$Treatment[count_pt$Treatment==4] <- 'Marinobacter'
 cnet <- read.csv("data/SIP_cnet_v2.csv")
 cnet <- cnet[cnet$Cnet>0,]
 cnet_info <- read.csv("data/SIP_sample_info.csv")

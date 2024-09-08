@@ -102,10 +102,13 @@ ggplot() +
 ggsave("figures/figS_size_inner.pdf", width = 2.5, height = 3)
 
 
-
 ## statistical test
 permil_append_vis <- subset(permil_append, ring=='outer')
 permil_df_stat_vis <- subset(permil_df_stat, ring=='outer')
 
 kruskal.test(ROIAREA ~ treatment, data = permil_append_vis)
 pairwise.wilcox.test(permil_append_vis$ROIAREA, permil_append_vis$treatment, p.adjust.method = "BH")
+
+
+## export data
+write.csv(permil_df_stat, 'data/size_bacteria.csv')
