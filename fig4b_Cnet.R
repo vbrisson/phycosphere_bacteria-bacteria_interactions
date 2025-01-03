@@ -14,7 +14,7 @@ cnet_info <- read.csv("data/SIP_sample_info.csv")
 cnet_append <- append_xnet(cnet, cnet_info)
 cnet_outer <- cnet_append[(cnet_append$ring=='outer'),]
 cnet_outer_stat <- cnet_outer %>%
-   group_by(treatment, ring) %>%
+   group_by(treatment, ring, microplate) %>%
    summarize(q25 = quantile(Cnet, probs = 0.25),
              q50 = quantile(Cnet, probs = 0.5),
              q75 = quantile(Cnet, probs = 0.75),

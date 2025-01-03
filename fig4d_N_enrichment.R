@@ -72,19 +72,10 @@ ggsave("figures/SIP_N_permil_outer.pdf", width = 1.5, height = 2.5)
 # ggsave("figures/SIP_N_permil_outer_annot.pdf", width = 3, height = 3)
 
 
-
-# # statistical test
-# df_outer <- df_vis[df_vis$distance=='outer',]
-# df_outer['treatment_p'] <- df_outer['treatment']!='none'
-# kruskal.test(value~treatment_p, data=df_outer)
-# 
-# kruskal.test(value~treatment, data=df_outer)
-# dunnTest(value~treatment, data=df_outer, method='holm')
-# 
-# t.test(df_vis[df_vis$treatment=='Alcanivorax',4], df_vis[df_vis$treatment=='Devosia',4])
-# t.test(df_vis[df_vis$treatment=='Alcanivorax',4], df_vis[df_vis$treatment=='Marinobacter',4])
-# t.test(df_vis[df_vis$treatment=='Devosia',4], df_vis[df_vis$treatment=='Marinobacter',4])
-# 
-# t.test(df_vis[df_vis$treatment=='none',4], df_vis[df_vis$treatment=='Alcanivorax',4])
-# t.test(df_vis[df_vis$treatment=='none',4], df_vis[df_vis$treatment=='Devosia',4])
-# t.test(df_vis[df_vis$treatment=='none',4], df_vis[df_vis$treatment=='Marinobacter',4])
+# statistical test
+kruskal.test(N_permil ~ treatment, data = permil_append_vis)
+pairwise.wilcox.test(
+  permil_append_vis$N_permil, 
+  permil_append_vis$treatment, 
+  p.adjust.method = "BH"
+)

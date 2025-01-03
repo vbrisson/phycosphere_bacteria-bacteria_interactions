@@ -1,7 +1,7 @@
 ## Modules used frequently throughout
 get_df <- function(fileloc = 'data/flow2_bact.csv'){
   df <- read.csv(file=fileloc)
-  df <- df[df$Time!=0,]
+  # df <- df[df$Time!=0,]
   df$Treatment[df$Treatment==1] <- 'Devosia'
   df$Treatment[df$Treatment==2] <- 'none'
   df$Treatment[df$Treatment==3] <- 'Alcanivorax'

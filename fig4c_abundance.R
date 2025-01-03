@@ -1,37 +1,40 @@
+library('ggplot2')
+library('ggforce')
 library("dplyr")
 source("utils.R")  # Continued from "fig4_pm_count.R"
 # detach(package:Rmisc)
 # detach(package:plyr)
 
 
-df_fold <- get_df_fold(get_df(), get_df_alg())
+df <- get_df()
 
-df_fold_stat <- df_fold %>%
-  group_by(Treatment, Ring) %>%
-  summarize(q25 = quantile(rate, probs = 0.25), 
-            q50 = quantile(rate, probs = 0.5),
-            q75 = quantile(rate, probs = 0.75),
+df_stat <- df %>%
+  group_by(Treatment, Ring, Time) %>%
+  summarize(q25 = quantile(Abundance, probs = 0.25), 
+            q50 = quantile(Abundance, probs = 0.5),
+            q75 = quantile(Abundance, probs = 0.75),
             n = n()
             )
 
 
-##### PLOT GROWTH RATE
+##### PLOT ABUNDANCE, DAY 14
 ## OUTER RING
-df_fold_vis <- df_fold[df_fold$Ring==2,]
-df_fold_stat_vis <- df_fold_stat[df_fold_stat$Ring==2,]
+df_vis <- df[df$Ring==2 & df$Time==14,]
+df_stat_vis <- df_stat[df_stat$Ring==2 & df_stat$Time==14,]
 
 ggplot() +
-  geom_sina(data = df_fold_vis, 
-            aes(Treatment, rate, color=Treatment),
+  geom_sina(data = df_vis, 
+            aes(Treatment, Abundance, color=Treatment),
             scale = 'width',
-            size=1.5,
+            size=1.2,
             maxwidth = 0.45, shape=21, fill="white", stroke=0.5) +
-  geom_errorbar(data=df_fold_stat_vis, 
+  geom_errorbar(data=df_stat_vis, 
                 aes(x=Treatment, ymin=q25, ymax=q75),
                 width = 0.15, size=0.3, color='black') + 
-  geom_errorbar(data=df_fold_stat_vis, 
+  geom_errorbar(data=df_stat_vis, 
                 aes(x=Treatment, ymin=q50, ymax=q50),
                 width = 0.3, size=0.6, color='black') + 
+  scale_y_continuous(breaks= seq(0,1.4e7,4e6)) +
   scale_color_manual(values=c("#E06666","#5E7BFB","#1a6b3b","#878787")) +
   theme(strip.background = element_blank(),
         panel.background = element_blank(),
@@ -53,13 +56,13 @@ ggplot() +
         text = element_text(size = 8)
   )
 
-ggsave("figures/fig4_rate_outer.pdf", width = 1.5, height = 2.5)
+ggsave("fig4_abundance_outer.pdf", width = 1.5, height = 2.5)
 
 
 ## stats test outer ring
-kruskal.test(rate ~ Treatment, data = df_fold_vis)
+kruskal.test(Abundance ~ Treatment, data = df_vis)
 pairwise.wilcox.test(
-  df_fold_vis$rate, 
-  df_fold_vis$Treatment, 
+  df_vis$Abundance, 
+  df_vis$Treatment, 
   p.adjust.method = "BH"
 )
