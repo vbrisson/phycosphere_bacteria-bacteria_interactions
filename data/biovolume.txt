@@ -1,0 +1,5 @@
+# Mayali et al., Nature Communications, 2023. Unit in cubic microns.
+Genus,Biovolume
+Alcanivorax,1.583362697
+Devosia,2.148849375
+Marinobacter,1.07337749
