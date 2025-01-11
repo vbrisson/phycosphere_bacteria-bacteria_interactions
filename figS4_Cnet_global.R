@@ -8,7 +8,6 @@ source('utils.R')
 
 
 cnet <- read.csv("data/SIP_cnet_v2.csv")
-cnet <- cnet[cnet$Cnet>0,]
 cnet$Cnet <- cnet$Cnet*100 # to percent
 cnet_info <- read.csv("data/SIP_sample_info.csv")
 cnet_append <- append_xnet(cnet, cnet_info)
@@ -58,4 +57,4 @@ ggplot() +
          axis.line.y.right = element_blank()
   )
 
-ggsave("figures/SIP_Cnet_global.pdf", width = 6, height = 5)
+ggsave("SIP_Cnet_global.pdf", width = 6, height = 5)

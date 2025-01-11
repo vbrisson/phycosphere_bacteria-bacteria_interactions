@@ -21,7 +21,6 @@ count_pt$Treatment[count_pt$Treatment==2] <- 'none'
 count_pt$Treatment[count_pt$Treatment==3] <- 'Alcanivorax'
 count_pt$Treatment[count_pt$Treatment==4] <- 'Marinobacter'
 cnet <- read.csv("data/SIP_cnet_v2.csv")
-cnet <- cnet[cnet$Cnet>0,]
 cnet_info <- read.csv("data/SIP_sample_info.csv")
 
 # summarize cnet
@@ -74,3 +73,10 @@ ggplot(merged_stat[merged_stat$ring=='inner',], aes(x=cnet_q50, y=count_mean, co
         )
 
 dev.off()
+
+
+## for numbers in main text
+cnet_stat_merged <- 
+  summarize_cnet(cnet, cnet_info)$df %>%
+  group_by(treatment, ring) %>%
+  summarize(Cnet = quantile(Cnet*100, probs = 0.5), N = n())

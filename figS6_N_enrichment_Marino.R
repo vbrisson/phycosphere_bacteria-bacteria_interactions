@@ -14,7 +14,7 @@ sample_info$microplate <- as.character(sample_info$microplate)
 permil_append <- append_xnet(permil_df, sample_info)
 
 permil_app_stat <- permil_append %>%
-  group_by(treatment, ring, strain) %>%
+  group_by(treatment, ring, strain, microplate) %>%
   summarize(N_q25 = quantile(N_permil, probs = 0.25),
             N_q50 = quantile(N_permil, probs = 0.5),
             N_q75 = quantile(N_permil, probs = 0.75),
@@ -25,7 +25,7 @@ permil_app_stat <- permil_append %>%
   )
 
 
-# all strains
+# global analysis
 ggplot() +
   geom_sina(data = permil_append,
             aes(x=treatment, y=N_permil, color=treatment),
@@ -41,9 +41,9 @@ ggplot() +
   geom_text(data = permil_app_stat,
             aes(x=treatment, y=-100, label=paste('n = ', n, sep='')),
             position=position_dodge(width=0.9), vjust=-0.5, size=2.5) +
-  facet_grid(microplate ~ ring) +
   scale_y_continuous(breaks = append(seq(0, 800, 200), seq(1000, 5000, 1000))) +
-  scale_y_break(c(800, 805), scales=0.4) +
+  scale_y_break(c(900, 905), scales=0.4) +
+  facet_grid(microplate ~ ring) +
   # scale_y_continuous(breaks = seq(0, 5000, 250)) +
   scale_color_manual(values=c("#E06666","#5E7BFB","#1a6b3b","#878787")) +
   # Alcani, Devosi, Marino, none
@@ -66,103 +66,7 @@ ggplot() +
         # axis.text.y = element_blank()
   )
 
-ggsave("figures/SIP_N_permil.pdf", width = 5, height = 6)
-
-
-# Inner strain
-permil_append_vis <- subset(permil_append, ring=='inner')
-permil_app_stat_vis <- subset(permil_app_stat, ring=='inner')
-
-ggplot() +
-  geom_sina(data = permil_append_vis,
-            aes(x=treatment, y=N_permil, color=treatment),
-            maxwidth = 0.5,
-            alpha=0.3,
-            size=0.6) +
-  geom_errorbar(data = permil_app_stat_vis,
-                aes(x=treatment, ymin=N_q50, ymax=N_q50),
-                width = 0.3, size=0.8, color='black') +
-  geom_errorbar(data = permil_app_stat_vis,
-                aes(x=treatment, ymin=N_q25, ymax=N_q75),
-                width = 0.15, size=0.4, color='black') +
-  geom_text(data = permil_app_stat_vis,
-            aes(x=treatment, y=-0.2, label=paste('n = ', n, sep='')),
-            position=position_dodge(width=0.9), vjust=-0.5, size=2.5) +
-  scale_y_continuous(breaks = append(seq(0, 800, 200), seq(1000, 5000, 1000))) +
-  scale_y_break(c(800, 805), scales=0.1) +
-  # scale_y_continuous(breaks = seq(0, 5000, 250)) +
-  scale_color_manual(values=c("#E06666","#5E7BFB","#1a6b3b","#878787")) +
-  # Alcani, Devosi, Marino, none
-  theme(strip.background = element_blank(),
-        panel.background = element_blank(),
-        panel.grid.major = element_blank(),
-        panel.grid.minor = element_blank(),
-        plot.background = element_blank(),
-        panel.border = element_blank(),
-        legend.position = "none",
-        axis.text = element_text(colour = "black", size = 8),
-        axis.line = element_line(size = 0.2, colour = 'black'),
-        axis.ticks = element_line(colour = 'black', size=0.2),
-        axis.text.y.right = element_blank(),
-        axis.ticks.y.right = element_blank(),
-        axis.line.y.right = element_blank(),
-        axis.title.x = element_blank(),
-        axis.title.y = element_blank(),
-        axis.text.x = element_blank(),
-        axis.text.y = element_blank(),
-        text = element_text(size = 8)
-  )
-
-ggsave("figures/SIP_N_permil_inner.pdf", width = 3, height = 3)
-# ggsave("figures/SIP_N_permil_inner_annot.pdf", width = 3, height = 3)
-
-
-# Outer strain
-permil_append_vis <- subset(permil_append, ring=='outer')
-permil_app_stat_vis <- subset(permil_app_stat, ring=='outer')
-
-ggplot() +
-  geom_sina(data = permil_append_vis,
-            aes(x=treatment, y=N_permil, color=treatment),
-            maxwidth = 0.5,
-            alpha=0.3,
-            size=0.6) +
-  geom_errorbar(data = permil_app_stat_vis,
-                aes(x=treatment, ymin=N_q50, ymax=N_q50),
-                width = 0.3, size=0.8, color='black') +
-  geom_errorbar(data = permil_app_stat_vis,
-                aes(x=treatment, ymin=N_q25, ymax=N_q75),
-                width = 0.15, size=0.4, color='black') +
-  geom_text(data = permil_app_stat_vis,
-            aes(x=treatment, y=-0.2, label=paste('n = ', n, sep='')),
-            position=position_dodge(width=0.9), vjust=-0.5, size=2.5) +
-  scale_y_continuous(breaks = append(seq(0, 750, 250), seq(1000, 5000, 2000))) +
-  scale_y_break(c(750, 751), scales=0.1) +
-  scale_color_manual(values=c("#E06666","#5E7BFB","#1a6b3b","#878787")) +
-  # Alcani, Devosi, Marino, none
-  theme(strip.background = element_blank(),
-        panel.background = element_blank(),
-        panel.grid.major = element_blank(),
-        panel.grid.minor = element_blank(),
-        plot.background = element_blank(),
-        panel.border = element_blank(),
-        legend.position = "none",
-        axis.text = element_text(colour = "black", size = 8),
-        axis.line = element_line(size = 0.2, colour = 'black'),
-        axis.ticks = element_line(colour = 'black', size=0.2),
-        axis.text.y.right = element_blank(),
-        axis.ticks.y.right = element_blank(),
-        axis.line.y.right = element_blank(),
-        axis.title.x = element_blank(),
-        axis.title.y = element_blank(),
-        axis.text.x = element_blank(),
-        axis.text.y = element_blank(),
-        text = element_text(size = 8)
-  )
-
-ggsave("figures/SIP_N_permil_outer.pdf", width = 3, height = 3)
-# ggsave("figures/SIP_N_permil_outer_annot.pdf", width = 3, height = 3)
-
+ggsave("SIP_N_permil.pdf", width = 5, height = 6)
 
 
 # # statistical test

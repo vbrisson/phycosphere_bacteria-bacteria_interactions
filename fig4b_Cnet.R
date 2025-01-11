@@ -8,13 +8,12 @@ source('utils.R')
 
 
 cnet <- read.csv("data/SIP_cnet_v2.csv")
-cnet <- cnet[cnet$Cnet>0,]
 cnet$Cnet <- cnet$Cnet*100 # to percent
 cnet_info <- read.csv("data/SIP_sample_info.csv")
 cnet_append <- append_xnet(cnet, cnet_info)
 cnet_outer <- cnet_append[(cnet_append$ring=='outer'),]
 cnet_outer_stat <- cnet_outer %>%
-   group_by(treatment, ring, microplate) %>%
+   group_by(treatment, ring) %>%
    summarize(q25 = quantile(Cnet, probs = 0.25),
              q50 = quantile(Cnet, probs = 0.5),
              q75 = quantile(Cnet, probs = 0.75),
@@ -41,12 +40,12 @@ ggplot() +
   scale_y_break(c(9, 10), scales=0.1) +
   scale_color_manual(values=c("#E06666","#5E7BFB","#1a6b3b","#878787")) +  
     # Alcani, Devosi, Marino, none
-  theme(strip.background = element_blank(),
-        panel.background = element_blank(),
+  theme(strip.background = element_rect(fill='transparent', color=NA),
+        panel.background = element_rect(fill='transparent', color=NA),
         panel.grid.major = element_blank(),
         panel.grid.minor = element_blank(),
-        plot.background = element_blank(),
-        panel.border = element_blank(),
+        plot.background = element_rect(fill='transparent', color=NA),
+        panel.border = element_rect(fill='transparent', color=NA),
         legend.position = "none",
         axis.text = element_text(colour = "black", size = 8),
         axis.ticks = element_line(colour = 'black', size=0.2),
@@ -61,7 +60,7 @@ ggplot() +
         text = element_text(size = 8)
         )
 
-ggsave("figures/SIP_cnet_outer.pdf", width = 1.5, height = 2.5)
+ggsave("SIP_cnet_outer.pdf", width = 1.5, height = 2.35)
 # ggsave("figures/SIP_cnet_day14_inner_break.pdf", width = 3, height = 4)
 
 
