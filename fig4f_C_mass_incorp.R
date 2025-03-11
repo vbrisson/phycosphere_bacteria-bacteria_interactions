@@ -111,7 +111,7 @@ get_total_incorp_df <- function(){
     )
   
   return(df_summ)
-}
+} # end of function
 
 
 cnet <- read.csv("data/SIP_cnet_v2.csv")
@@ -122,26 +122,27 @@ df_summ <- get_total_incorp_df()
 
 
 ## plot, average over microplates
-df_summ[df_summ$treatment!='none',] %>% 
+df_summ %>% 
   mutate(SD = c_incorp_sd) %>%
   group_by(treatment) %>%
   mutate(SDPos = cumsum(c_incorp_mean)) %>%
-  ggplot(aes(x = reorder(treatment, -c_incorp_mean), y = c_incorp_mean, fill = treatment,
-             color = treatment, alpha=factor(ring, levels=c("outer","inner"))
+  ggplot(aes(x = factor(treatment, levels=c('Devosia','Marinobacter','Alcanivorax','none')), 
+             y = c_incorp_mean, fill = treatment, color = treatment, 
+             alpha=factor(ring, levels=c("inner","outer"))
              )) +
-  geom_bar(stat = "identity", color='black', size=0.2, width=0.5) +
+  geom_bar(stat = "identity", aes(color=treatment), size=0.4, width=0.6) +
   # geom_text(aes(label = paste(round(c_incorp_mean,3), '±', round(c_incorp_sd,3))), 
   #           position = position_stack(vjust =  0.5)) +
-  geom_errorbar(aes(ymin = SDPos-SD, ymax = SDPos+SD), 
+  geom_errorbar(aes(ymin = c_incorp_mean-SD, ymax = c_incorp_mean+SD), 
                 width=0.1, 
                 linewidth=0.2, 
                 position = "identity", 
                 color='black',
                 alpha =1) +
-  scale_alpha_discrete(range=c(1, 0)) +
-  # scale_fill_manual(values=c("#FFDFE1", "#D2DCFB", "#F8DFC4", "#D1D3D4")) +
-  scale_color_manual(values=c("#bd2529", "#4159a7", "#1b6b3b", "white")) +  
-  scale_fill_manual(values=c("#bd2529", "#4159a7", "#1b6b3b", "white")) +  
+  scale_y_continuous(expand = c(0, 0), limits = c(0, NA)) +
+  scale_alpha_discrete(range=c(0, 1)) +
+  scale_color_manual(values=c("#bd2529", "#4159a7", "#1b6b3b", "#58595b")) +  
+  scale_fill_manual(values=c("#bd2529", "#4159a7", "#1b6b3b", "#58595b")) +  
   # Alcani, Devosi, Marino, none
   ylab('carbon mass incorporation (ng C)') +
   theme(strip.background = element_rect(fill=NA),
@@ -159,6 +160,6 @@ df_summ[df_summ$treatment!='none',] %>%
         axis.ticks = element_line(colour = 'black', size=0.2),
   )
 
-ggsave("C_incorp_total_v2.pdf", width = 1.8, height = 1.8)
+ggsave("C_incorp_total_v2.pdf", width = 2.1, height = 1.8)
 
 write.csv(df_summ, "data/c_mass_incorp.csv")
